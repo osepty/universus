@@ -160,7 +160,7 @@ if(isset($_POST['faculdade2']) && $_POST['faculdade2'] != ""){
 
     <div id="sidebar-esq" class="sidebar sidebar-esquerda glass-card">
     <button class="btn-fechar" onclick="toggleSidebar('sidebar-esq')">X</button>
-    <h2>Comentários - <?php echo $f1['nome']; ?></h2>
+    <h2>Comentários - <?php echo $f1 ? $f1['nome'] : "Selecione uma faculdade"; ?></h2>
 
     <div class="area-comentarios">
     <?php
@@ -172,7 +172,7 @@ if(isset($_POST['faculdade2']) && $_POST['faculdade2'] != ""){
                 ORDER BY comentarios.data_comentario DESC";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $escolha1);
+        $stmt->bind_param("s", $f1['id']);
         $stmt->execute();
         $resultado = $stmt->get_result();
 
@@ -186,10 +186,10 @@ if(isset($_POST['faculdade2']) && $_POST['faculdade2'] != ""){
     <?php endwhile; $stmt->close(); } ?>
     </div>
 
-    <?php if(isset($_SESSION["usuario_id"]) && $escolha1 != "padrao"): ?>
+    <?php if(isset($_SESSION["usuario_id"]) && $f1): ?>
     <div class="add-comentario">
         <form method="POST" style="display:flex; gap:10px; width:100%;">
-            <input type="hidden" name="faculdade" value="<?php echo $escolha1; ?>">
+            <input type="hidden" name="faculdade" value="<?php echo $f1['id']; ?>">
             <input type="text" name="comentario" placeholder="Escreva..." required>
             <button type="submit" name="enviar_comentario">Enviar</button>
         </form>
@@ -199,13 +199,14 @@ if(isset($_POST['faculdade2']) && $_POST['faculdade2'] != ""){
     <?php endif; ?>
 </div>
 
-    <div id="sidebar-dir" class="sidebar sidebar-direita glass-card">
+  <div id="sidebar-dir" class="sidebar sidebar-direita glass-card">
     <button class="btn-fechar" onclick="toggleSidebar('sidebar-dir')">X</button>
-    <h2>Comentários - <?php echo $f2['nome']; ?></h2>
+    
+    <h2>Comentários - <?php echo $f2 ? htmlspecialchars($f2['nome']) : "Selecione uma faculdade"; ?></h2>
 
     <div class="area-comentarios">
     <?php
-    if(isset($_POST['faculdade2']) && $_POST['faculdade2'] != ""){
+    if(isset($f2) && $f2 != null){ // Usamos a variável $f2 que já foi carregada no topo
         $sql = "SELECT comentarios.comentario, comentarios.data_comentario, usuarios.email
                 FROM comentarios
                 JOIN usuarios ON comentarios.usuario_id = usuarios.id
@@ -213,7 +214,7 @@ if(isset($_POST['faculdade2']) && $_POST['faculdade2'] != ""){
                 ORDER BY comentarios.data_comentario DESC";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $escolha2);
+        $stmt->bind_param("i", $f2['id']); // "i" de integer, pois o ID costuma ser número
         $stmt->execute();
         $resultado = $stmt->get_result();
 
@@ -227,16 +228,16 @@ if(isset($_POST['faculdade2']) && $_POST['faculdade2'] != ""){
     <?php endwhile; $stmt->close(); } ?>
     </div>
 
-    <?php if(isset($_SESSION["usuario_id"]) && $escolha2 != "padrao"): ?>
+    <?php if(isset($_SESSION["usuario_id"]) && $f2): ?>
     <div class="add-comentario">
         <form method="POST" style="display:flex; gap:10px; width:100%;">
-            <input type="hidden" name="faculdade" value="<?php echo $escolha2; ?>">
+            <input type="hidden" name="faculdade" value="<?php echo $f2['id']; ?>">
             <input type="text" name="comentario" placeholder="Escreva..." required>
             <button type="submit" name="enviar_comentario">Enviar</button>
         </form>
     </div>
     <?php else: ?>
-        <p style="color:#aaa;">Faça login e selecione uma faculdade.</p>
+        <p style="color:#aaa;">Faça login e selecione a faculdade da direita.</p>
     <?php endif; ?>
 </div>
 
