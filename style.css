@@ -23,9 +23,10 @@ body {
 
 .container-principal {
     display: flex;
-    align-items: center;
-    gap: 40px;
-    width: 95%;
+    justify-content: center; /* Centraliza o grupo todo */
+    align-items: center;     /* Alinha o VS verticalmente com os cards */
+    gap: 20px;
+    width: 100%;
     max-width: 1200px;
 }
 
@@ -36,7 +37,14 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 30px;
     padding: 30px;
-    width: 350px;
+    
+    /* MUDANÇAS AQUI: */
+    width: 380px;            /* Largura fixa para os dois lados serem iguais */
+    min-height: 600px;       /* Altura mínima para o card não "crescer" do nada */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    
     text-align: center;
     box-shadow: 0 15px 35px rgba(0,0,0,0.5);
     transition: transform 0.3s ease;
@@ -97,9 +105,11 @@ body {
 }
 
 .vs-texto {
-    font-size: 120px;
+    flex: 0 0 150px; /* Diz ao navegador: o VS tem sempre 150px de largura, sem choro */
+    font-size: 100px; /* Reduzi um pouco para caber melhor em telas menores */
     margin: 0;
     font-weight: 900;
+    text-align: center;
     color: transparent;
     -webkit-text-stroke: 3px #FF3D00;
     text-shadow: 0 0 30px rgba(255, 61, 0, 0.5);
@@ -397,25 +407,7 @@ body {
     padding: 20px;
 }
 
-/* Estilo dos botões grandes do menu (reaproveitando o glass-card) */
-.menu-btn-grande.glass-card {
-    width: 100%;
-    padding: 25px;
-    font-size: 24px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none; /* Para o link do Login */
-    display: block; /* Para o link se comportar como botão */
-    color: white;
-    background: rgba(255, 255, 255, 0.08); /* Um pouco mais claro que o padrão */
-}
 
-.menu-btn-grande.glass-card:hover {
-    background: rgba(255, 234, 0, 0.15); /* Amarelo sutil ao passar o mouse */
-    border-color: #FFEA00;
-    transform: scale(1.02) translateY(-5px); /* Leve aumento */
-}
 
 .btn-fechar-menu-topo {
     position: absolute;
@@ -538,9 +530,10 @@ body {
 }
 /* --- Ajuste nos botões do Menu Principal --- */
 .menu-btn-grande.glass-card {
-    /* Reseta a largura fixa de 350px que vem da classe .glass-card original */
+    /* Reseta a largura fixa e a ALTURA GIGANTE que vem da classe original */
     width: 100% !important; 
-    max-width: 350px; /* Define um limite para não esticar demais em telas grandes */
+    max-width: 350px; 
+    min-height: auto !important; /* <--- ESSA É A CORREÇÃO QUE SALVA A VIDA */
     
     padding: 20px;
     font-size: 24px;
@@ -783,3 +776,36 @@ body {
     color: #aaa;
     margin-bottom: 8px;
 }
+
+.rating {
+    display: flex;
+    flex-direction: row-reverse; /* Inverte para o hover funcionar da esquerda para a direita */
+    justify-content: center;
+    gap: 5px;
+}
+
+.rating input { display: none; } /* Esconde o botão rádio real */
+
+.rating label {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="grey"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+/* Quando passa o mouse ou seleciona, a estrela (e as anteriores) ficam laranjas */
+.rating label:hover,
+.rating label:hover ~ label,
+.rating input:checked ~ label {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="orange"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>');
+}
+.container-estrelas {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza "Avalie esta instituição" e as estrelas */
+}
+
